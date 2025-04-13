@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    html,body{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    #app{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+    textarea{
+        width: 97%;
+        height: 97%;
+        border: none;
+        outline: none;
+        resize: none;
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
+</style>
+<body>
+    <div id="app">
+        <textarea v-model="content" @keyup="upload"></textarea>
+    </div>
+</body>
+<script>
+    const { createApp,ref} = Vue
+    createApp({
+        setup() {
+            const content = ref("{{.msg}}")
+            const upload=()=>{
+                axios.post("/upload",{
+                    content:content.value
+                })
+            }
+            return {
+                content,
+                upload
+            }
+        }
+    }).mount('#app')
+</script>
+</html>
