@@ -1,0 +1,10 @@
+[Unit]
+Description=smddgz service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/smddgz/smddgz
+
+[Install]
+WantedBy=multi-user.target

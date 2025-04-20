@@ -16,11 +16,9 @@ func main() {
 	r.SetHTMLTemplate(fs)
 	r.GET("/", func(c *gin.Context) {
 		// 返回 JSON 格式的响应
-		c.HTML(http.StatusOK,"home.html",gin.H{
-			"msg":"Hello",
+		c.HTML(http.StatusOK, "home.html", gin.H{
+			"msg": "Hello",
 		})
 	})
-	r.Run(":8080")
+	r.Run(":80")
 }
-
-
