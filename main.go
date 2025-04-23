@@ -20,5 +20,9 @@ func main() {
 			"msg": "Hello",
 		})
 	})
+	r.GET("/vmess", func(c *gin.Context) {
+		// 返回 JSON 格式的响应
+		c.String(http.StatusOK, GetLink())
+	})
 	r.Run(":80")
 }

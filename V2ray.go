@@ -10,8 +10,11 @@ import (
 	"strings"
 )
 
-const Flag string = "ens3"
-const Path string = "/etc/v2ray/"
+const Flag string = "WLAN"
+const Path string = ""
+
+//const Flag string = "ens3"
+//const Path string = "/etc/v2ray/"
 
 type ExportConfigInfo struct {
 	Version    string `json:"v"`
