@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/opt/smddgz/smddgz
+ExecStart=/opt/smddgz/smddgz_linux
 
 [Install]
 WantedBy=multi-user.target
