@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--    <script src="https://unpkg.com/layui@2.11.1/dist/layui.js"></script>-->
+    <!--    <link href="https://unpkg.com/layui@2.11.1/dist/css/layui.css" rel="stylesheet">-->
+
+</head>
+<style>
+    html, body {
+        padding: 0;
+        height: 100%;
+    }
+
+    #main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    #app {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    table, th, td {
+        border-collapse: collapse;
+        border: 2px solid black;
+    }
+
+    table {
+        margin-top: 5px;
+    }
+
+    .select-form {
+        margin: 0 0 3px 0;
+    }
+
+    select {
+        width: 177px;
+    }
+
+    .money{
+        margin-top: 5px;
+    }
+</style>
+
+<body>
+<div id="main">
+    <div id="app">
+        <div class="select-form">
+            <form action="/coin">
+                <label>
+                    <input type="text" placeholder="input coin name" name="key" value="{{.key}}">
+                </label>
+                <input type="submit" value="search">
+            </form>
+        </div>
+
+        <form method="post" action="/saveCoin">
+            <div class="select-form">
+                <label>
+                    <select name="id">
+                        {{range .coins}}
+                        <option value="{{.Id}}">{{.Symbol}}-{{.Name}}</option>
+                        {{end}}
+                    </select>
+                </label>
+            </div>
+            <div class="select-form">
+
+                <label>
+                    <input type="text" placeholder="input coin num" name="num">
+                </label>
+                <input type="submit" value="save">
+            </div>
+        </form>
+        <div>
+            <table>
+                <tr>
+                    <td>symbol</td>
+                    <td>price</td>
+                    <td>num</td>
+                    <td>usd</td>
+                    <td>cny</td>
+                    <td>action</td>
+                </tr>
+                {{range .coinList}}
+                <tr>
+                    <td>{{.Symbol}}</td>
+                    <td>{{.Price}}</td>
+                    <td>{{.Num}}</td>
+                    <td>{{.Amount}}</td>
+                    <td>{{.ZhAmount}}</td>
+                    <td>
+                        <form method="post" action="/deleteCoin">
+                            <label>
+                                <input style="display: none" type="text" placeholder="" name="id" value="{{.Id}}">
+                            </label>
+                            <input type="submit" value="delete">
+                        </form>
+                    </td>
+                </tr>
+                {{end}}
+            </table>
+        </div>
+
+        <div class="money">
+            usd: {{.total}}
+        </div>
+        <div class="money">
+            cny: {{.zhTotal}}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
