@@ -141,7 +141,7 @@ func getExchangeRate() float64 {
 }
 
 func RoundToTwoDecimal(val float64) float64 {
-	return math.Round(val*10000000) / 10000000
+	return math.Round(val*100000) / 100000
 }
 
 type RespInfo struct {
@@ -150,13 +150,16 @@ type RespInfo struct {
 }
 
 type CoinInfo struct {
-	Id       int     `json:"id"`
-	Symbol   string  `json:"symbol"`
-	Price    float64 `json:"price"`
-	Name     string  `json:"name"`
-	Num      float64 `json:"num"`
-	Amount   float64 `json:"amount"`
-	ZhAmount float64 `json:"zhAmount"`
+	Id        int     `json:"id"`
+	Symbol    string  `json:"symbol"`
+	Price     float64 `json:"price"`
+	Name      string  `json:"name"`
+	Num       float64 `json:"num"`
+	Amount    float64 `json:"amount"`
+	ZhAmount  float64 `json:"zhAmount"`
+	PkSerial  string  `json:"pkSerial"`
+	CnyAmount float64 `json:"cnyAmount"`
+	UsdAmount float64 `json:"usdAmount"`
 }
 
 func main() {

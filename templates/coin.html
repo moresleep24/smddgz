@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <title>Coin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--    <script src="https://unpkg.com/layui@2.11.1/dist/layui.js"></script>-->
-    <!--    <link href="https://unpkg.com/layui@2.11.1/dist/css/layui.css" rel="stylesheet">-->
-
 </head>
 <style>
     html, body {
@@ -55,9 +51,9 @@
 <div id="main">
     <div id="app">
         <div class="select-form">
-            <form action="/coin">
+            <form action="[[.coinUri]]">
                 <label>
-                    <input type="text" placeholder="input coin name" name="key" value="{{.key}}">
+                    <input type="text" placeholder="input coin name" name="key" value="[[.key]]">
                 </label>
                 <input type="submit" value="search">
             </form>
@@ -67,9 +63,9 @@
             <div class="select-form">
                 <label>
                     <select name="id">
-                        {{range .coins}}
-                        <option value="{{.Id}}">{{.Symbol}}-{{.Name}}</option>
-                        {{end}}
+                        [[range .coins]]
+                        <option value="[[.Id]]">[[.Symbol]]-[[.Name]]</option>
+                        [[end]]
                     </select>
                 </label>
             </div>
@@ -91,31 +87,34 @@
                     <td>cny</td>
                     <td>action</td>
                 </tr>
-                {{range .coinList}}
+                [[range .coinList]]
                 <tr>
-                    <td>{{.Symbol}}</td>
-                    <td>{{.Price}}</td>
-                    <td>{{.Num}}</td>
-                    <td>{{.Amount}}</td>
-                    <td>{{.ZhAmount}}</td>
+                    <td>[[.Symbol]]</td>
+                    <td>[[.Price]]</td>
+                    <td>[[.Num]]</td>
+                    <td>[[.Amount]]</td>
+                    <td>[[.ZhAmount]]</td>
                     <td>
                         <form method="post" action="/deleteCoin">
                             <label>
-                                <input style="display: none" type="text" placeholder="" name="id" value="{{.Id}}">
+                                <input style="display: none" type="text" placeholder="" name="id" value="[[.Id]]">
                             </label>
                             <input type="submit" value="delete">
                         </form>
                     </td>
                 </tr>
-                {{end}}
+                [[end]]
             </table>
         </div>
 
         <div class="money">
-            usd: {{.total}}
+            usd: [[.total]]
         </div>
         <div class="money">
-            cny: {{.zhTotal}}
+            cny: [[.zhTotal]]
+        </div>
+        <div class="money">
+            rate: [[.rate]]
         </div>
     </div>
 </div>

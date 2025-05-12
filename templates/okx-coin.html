@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WS-COIN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<style>
+    html, body {
+        padding: 0;
+        height: 100%;
+    }
+
+    #main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    #app {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    table, th, td {
+        border-collapse: collapse;
+        border: 2px solid black;
+    }
+
+    td{
+        width: 80px;
+    }
+
+    table {
+        margin-top: 5px;
+    }
+
+    select {
+        width: 177px;
+    }
+
+    .money{
+        margin-top: 5px;
+    }
+
+    .td-action,.td-width{
+        width: 60px;
+    }
+</style>
+<body>
+    <div id="main">
+        <div id="app">
+            <table>
+                <tr>
+                    <td class="td-width">symbol</td>
+                    <td>price</td>
+                    <td class="td-width">num</td>
+                    <td class="td-width">usd</td>
+                    <td class="td-width">cny</td>
+                    <td class="td-action">action</td>
+                </tr>
+                <tr v-for="item in coinList">
+                    <td class="td-width">{{item.symbol}}</td>
+                    <td>{{item.price}}</td>
+                    <td class="td-width">{{item.num}}</td>
+                    <td class="td-width">{{item.usdAmount}}</td>
+                    <td class="td-width">{{item.cnyAmount}}</td>
+                    <td class="td-action"><button>delete</button></td>
+                </tr>
+            </table>
+            <div class="money">
+                usd: {{usdTotalAmount}}
+            </div>
+            <div class="money">
+                cny: {{cnyTotalAmount}}
+            </div>
+            <div class="money">
+                rate: {{exchangeRate}}
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    const { createApp, ref ,onMounted} = Vue
+
+    createApp({
+        setup() {
+            const message = ref('Hello vue!')
+            const usdTotalAmount=ref(0)
+            const cnyTotalAmount=ref(0)
+            const exchangeRate=ref(0)
+            const coinList= ref([])
+
+            onMounted(()=>{
+                const ws = new WebSocket("/ws?pkSerial=6f9d25e43a6b43e2bf500f5d4c7f7a63");
+                ws.onmessage=function (e){
+                    console.log(e.data)
+                    const res = JSON.parse(e.data);
+                    coinList.value=res.coinList
+                    usdTotalAmount.value=res.usdTotalAmount
+                    cnyTotalAmount.value=res.cnyTotalAmount
+                    exchangeRate.value=res.exchangeRate
+                }
+            })
+
+            return {
+                message,usdTotalAmount,cnyTotalAmount,exchangeRate,coinList
+            }
+        }
+    }).mount('#app')
+</script>
+</html>
