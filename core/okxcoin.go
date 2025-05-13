@@ -5,10 +5,10 @@ import (
 	_ "embed"
 	"encoding/json"
 	"github.com/gorilla/websocket"
-	_ "github.com/mattn/go-sqlite3"
 	"io"
 	"log"
 	"math"
+	_ "modernc.org/sqlite"
 	"net/http"
 	"os"
 	"strconv"
@@ -26,7 +26,7 @@ func Init(initSql string) {
 	dbPath = dir + string(os.PathSeparator) + "coin.db"
 	log.Println(dbPath)
 	var err error
-	conn, err = sql.Open("sqlite3", dbPath)
+	conn, err = sql.Open("sqlite", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
