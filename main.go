@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"embed"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"smddgz/core"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,6 +31,7 @@ func main() {
 	r := gin.Default()
 	tmpl := template.New("example").Delims("[[", "]]")
 	fs, _ := tmpl.ParseFS(templates, "templates/*")
+	r.Static("/word", "./word")
 	r.SetHTMLTemplate(fs)
 	r.GET("/", home)
 	r.GET("/vmess", vmess)
@@ -37,7 +40,62 @@ func main() {
 	r.GET("/ws", ws)
 	r.POST("/saveCoin", saveCoin)
 	r.POST("/deleteCoin", deleteCoin)
+	r.POST("/uploadWord", uploadWord)
+	r.GET("/selectWord", selectWord)
+	r.GET("/word", word)
+	r.GET("/selectDay", selectDay)
+	r.GET("/queryWord", queryWord)
 	r.Run(":80")
+}
+
+func queryWord(context *gin.Context) {
+	day, _ := context.GetQuery("day")
+	if !strings.EqualFold(day, "") {
+		context.JSON(http.StatusOK, core.QueryWord(day))
+	} else {
+		context.JSON(http.StatusOK, nil)
+	}
+}
+
+func selectDay(context *gin.Context) {
+	context.JSON(http.StatusOK, core.SelectDay())
+}
+
+func word(context *gin.Context) {
+	context.HTML(http.StatusOK, "english.html", gin.H{})
+}
+
+func selectWord(context *gin.Context) {
+	pageNum, _ := context.GetQuery("pageNum")
+	pageSize, _ := context.GetQuery("pageSize")
+	pageNumInt, _ := strconv.ParseInt(pageNum, 10, 64)
+	pageSizeInt, _ := strconv.ParseInt(pageSize, 10, 64)
+	wordList := core.SelectWord(pageNumInt, pageSizeInt)
+	context.JSON(http.StatusOK, wordList)
+}
+
+func uploadWord(context *gin.Context) {
+	file, _ := context.FormFile("file")
+	open, _ := file.Open()
+	scanner := bufio.NewScanner(open)
+	var wordList []core.Word
+	for scanner.Scan() {
+		text := scanner.Text()
+		if strings.EqualFold(text, "") {
+			break
+		}
+		now := time.Now()
+		format := now.Format("2006-01-02")
+
+		var word core.Word
+		word.Word = text
+		word.CreatedDate = format
+		wordList = append(wordList, word)
+	}
+	if len(wordList) != 0 {
+		core.SaveWord(wordList)
+	}
+	context.JSON(200, "ok")
 }
 
 func okxCoin(c *gin.Context) {

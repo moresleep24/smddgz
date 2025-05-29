@@ -44,6 +44,10 @@ func SaveOne(coin CoinInfo) {
 	conn.Exec("insert into t_coin(pk_serial,symbol,num) values(?,?,?)", coin.PkSerial, coin.Symbol, coin.Num)
 }
 
+func DeleteOne(pkSerial string) {
+	conn.Exec("delete from t_coin where pk_serial=?", pkSerial)
+}
+
 func SelectAll(pkSerial string) []CoinInfo {
 	var coins []CoinInfo
 	res, _ := conn.Query("select * from t_coin where pk_serial=?", pkSerial)

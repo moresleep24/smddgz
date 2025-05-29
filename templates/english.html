@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    html,body{
+        margin: 0;
+        /*height: 100%;*/
+        width: 100%;
+        overflow: auto; /* ✅ 添加这行 */
+
+    }
+    #main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    #app {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 20px;
+
+        /*height: 100%;*/
+    }
+    .audio-origin{
+        display: none;
+    }
+</style>
+<body>
+<div id="main">
+    <div id="app" class="div">
+        <div>
+            <input type="file" @change="uploadWord">
+        </div>
+        <div>
+            <label>
+                <select v-model="day" @change="changeDay">
+                    <option v-for="item in wordDay" :value="item">
+                        {{item}}
+                    </option>
+                </select>
+            </label>
+        </div>
+        <table>
+            <tr v-for="(item,index) in wordList" :key="index">
+                <td>{{item.word}}</td>
+                <td><button @click="playWord(index)">play</button></td>
+                <td class="audio-origin">
+                    <audio :ref="el => audioRef[index] = el" :src="item.usUrl" preload="auto" controls></audio>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+<script>
+
+    const { createApp, ref ,onMounted} = Vue
+
+    createApp({
+        setup() {
+            const message = ref('Hello vue!')
+            const pageNum = ref(1)
+            const pageSize = ref(10)
+            const wordList= ref([])
+            const wordUrl= ref('')
+            const wordDay=ref([])
+            const day=ref('')
+            const audioRef = ref([]);
+
+
+            const playWord=(index)=>{
+                audioRef.value[index].play()
+
+                // wordUrl.value=s
+                // const audio = audioRef.value;
+                //
+                // if(audio.readyState < 2){
+                //     audio.play()
+                // }
+                // audio.play();
+            }
+
+            const changeDay=()=>{
+                console.log(day.value)
+                qw()
+            }
+
+            const qw=()=>{
+                axios.get("/queryWord?day="+day.value).then(r=>{
+                    wordList.value=r.data
+                })
+            }
+
+            const uploadWord=(e)=>{
+                const file = e.target.files[0];
+                var fd = new FormData();
+                fd.append("file",file)
+                axios.post("/uploadWord",fd,{
+                    headers:{
+                        'Content-Type':"multipart/form-data"
+                    }
+                }).then((r)=>{
+                    console.log(r)
+                    window.location.reload()
+                })
+            }
+
+            onMounted(() => {
+                axios.get("/selectDay").then(r=>{
+                    wordDay.value=r.data
+                    day.value=wordDay.value[0]
+                    qw()
+                })
+            })
+
+            return {message,wordList,playWord,wordUrl,audioRef,wordDay,day,changeDay,uploadWord}
+        }
+
+    }).mount('#app')
+</script>
+</html>

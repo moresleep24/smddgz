@@ -128,6 +128,7 @@ func GetCoinData() map[string]interface{} {
 	dataMap["zhTotal"] = zhTotal
 	dataMap["coinList"] = list
 	dataMap["rate"] = rate
+	dataMap["profit"] = zhTotal - 205900
 
 	return dataMap
 }

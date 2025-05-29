@@ -5,6 +5,11 @@ create table if not exists t_coin
     num       REAL
 );
 
+create table if not exists t_word
+(
+    word TEXT,
+    created_date TEXT
+);
 
 DELETE
 FROM t_coin
@@ -27,4 +32,4 @@ values ('6f9d25e43a6b43e2bf500f5d4c7f7a63', 'DOGE', 3263);
 insert into t_coin(pk_serial, symbol, num)
 values ('6f9d25e43a6b43e2bf500f5d4c7f7a63', 'ETH', 0.2175);
 insert into t_coin(pk_serial, symbol, num)
-values ('6f9d25e43a6b43e2bf500f5d4c7f7a63', 'USDC', 266);
+values ('6f9d25e43a6b43e2bf500f5d4c7f7a63', 'USDC', 523);

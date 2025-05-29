@@ -13,8 +13,14 @@ import (
 //const Flag string = "WLAN"
 //const Path string = "E:\\goland\\smddgz\\static\\"
 
-const Flag string = "ens3"
-const Path string = "/etc/v2ray/"
+var Flag = []string{"eth", "ens", "WLAN"}
+var Ip string
+
+const Path string = "/etc/v2ray"
+
+func init() {
+	Ip = GetIp()
+}
 
 type ExportConfigInfo struct {
 	Version    string `json:"v"`
@@ -67,7 +73,15 @@ type Header struct {
 func GetLink() string {
 	var ic ImportConfigInfo
 	ip := GetIp()
-	file, _ := os.ReadFile(Path + "config.json")
+	files, _ := os.ReadDir(Path + "/conf")
+	name := Path + "/config.json"
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".json") {
+			name = Path + "/conf/" + file.Name()
+			break
+		}
+	}
+	file, _ := os.ReadFile(name)
 	_ = json.Unmarshal(file, &ic)
 	ib := ic.Inbounds[0]
 
@@ -94,13 +108,15 @@ func GetLink() string {
 
 func GetIp() string {
 	interfaces, _ := net.Interfaces()
-	for _, i := range interfaces {
-		if strings.EqualFold(Flag, i.Name) {
-			addrs, _ := i.Addrs()
-			for _, addr := range addrs {
-				if strings.Contains(addr.String(), ".") {
-					ip, _, _ := net.ParseCIDR(addr.String())
-					return ip.To4().String()
+	for _, s := range Flag {
+		for _, i := range interfaces {
+			if strings.Contains(i.Name, s) {
+				addrs, _ := i.Addrs()
+				for _, addr := range addrs {
+					if strings.Contains(addr.String(), ".") {
+						ip, _, _ := net.ParseCIDR(addr.String())
+						return ip.To4().String()
+					}
 				}
 			}
 		}
